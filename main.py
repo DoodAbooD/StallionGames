@@ -72,6 +72,7 @@ thing_character_saif = Thing("assets/char_saif.png", 0, 0, 100, 200, False)
 thing_character_nadeen = Thing("assets/char_nadeen.png", 0, 0, 100, 200, False)
 thing_character_hashem = Thing("assets/char_hashem.png", 0, 0, 100, 200, False)
 thing_selectChar_text = Thing("", 100, 100, 0, 0, True, "Select your characters", 30)
+thing_logo = Thing("assets/logo.png",600,300,100,100,False)
 
 # TODO add remaining things
 
@@ -100,6 +101,7 @@ while True:
 
         # add background and text to things to draw
         things.append(thing_intro_background)
+        things.append(thing_logo)
         # TODO add logo
         things.append(thing_intro_text)
 
