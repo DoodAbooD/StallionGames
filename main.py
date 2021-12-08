@@ -136,7 +136,8 @@ while True:
             # and checks if its greater than length of available characters
             pass
 
-        # TODO do the same for player 2 (Using keys 1 and 2)
+        # TODO do the same for player 2 (Using keys right and left)
+        # HASHEM
 
         player1_character = copy.deepcopy(available_characters[player1_selection])
         player2_character = copy.deepcopy(available_characters[player2_selection])
@@ -151,13 +152,13 @@ while True:
         things.append(player2_character)
 
         # TODO add key listener to confirm selection and move to next state
-
+        # SAIF
 
     elif state == 2:  # Level 1  (Red light, Green Light)
         get_ready_countdown = 3000  # 3000 frames
 
         if innerState == 0:  # GET READY SCREEN
-            # TODO handle this state as following:
+            # TODO handle this state as following: (FARHAN)
             # Add the level background to things
             # Add a text "GET READY" to things , in the middle of screen
             # Add the 2 selected characters to things, positioned at the left of screen
@@ -179,9 +180,15 @@ while True:
             pass
 
     elif state == 3:  # level 2 (Candy Carving)
+        # TODO: Find assets for this level
+
         pass
 
     elif state == 4:  # level 3 (Tug of War)
+        # TODO (MAEEN)
+        # 1- Add background to the level
+        # 2- Add the 2 characters at opposite sides of the screen
+
         pass
 
     elif state == 5:  # Level Winner screen
