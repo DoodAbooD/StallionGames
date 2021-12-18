@@ -48,10 +48,17 @@ class Thing:
             w.blit(scaled_image, (self.pos_x, self.pos_y))
 
 
-window = pygame.display.set_mode((1200, 600))
+WINDOW_WIDTH = 1200
+WINDOW_HEIGHT = 600
+
+window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("StallionGames")
 window.fill((255, 255, 255))
 pygame.display.update()
+
+pygame.mixer.init()
+redGreenLightSound = pygame.mixer.Sound("assets/red_green_sound_short.wav")
+
 
 pygame.font.init()
 
@@ -66,13 +73,15 @@ things = list()
 
 # things that can be added
 thing_intro_background = Thing("assets/intro_bg.png", 0, 0, 1200, 600, False)
-thing_intro_text = Thing("", 100, 100, 0, 0, True, "Press Space to Start!", 30)
+thing_intro_text = Thing("", 400, 500, 0, 0, True, "Press Space to Start!", 30)
 thing_character_doll = Thing("assets/char_doll.png", 0, 0, 100, 300, False)
-thing_character_saif = Thing("assets/char_saif.png", 0, 0, 100, 200, False)
-thing_character_nadeen = Thing("assets/char_nadeen.png", 0, 0, 100, 200, False)
-thing_character_hashem = Thing("assets/char_hashem.png", 0, 0, 100, 200, False)
-thing_selectChar_text = Thing("", 100, 100, 0, 0, True, "Select your characters", 30)
-thing_logo = Thing("assets/logo.png",600,300,100,100,False)
+thing_character_saif = Thing("assets/char_saif.png", 0, 0, 100, 180, False)
+thing_character_nadeen = Thing("assets/char_nadeen.png", 0, 0, 100, 180, False)
+thing_character_hashem = Thing("assets/char_hashem.png", 0, 0, 100, 180, False)
+thing_character_triangle = Thing("assets/char_triangle.png", 0, 0, 100, 180, False)
+thing_character_circle = Thing("assets/char_circle.png", 0, 0, 100, 180, False)
+thing_selectChar_text = Thing("", 450, 50, 0, 0, True, "Select your characters", 30)
+thing_logo = Thing("assets/logo.png",400,50,300,300,False)
 
 # TODO add remaining things
 
@@ -82,6 +91,7 @@ player1_selection = 0
 player2_selection = 1
 
 key_counter = 0
+countdown = 180  # 1000 frames
 
 while True:
     clock.tick(FPS)
@@ -118,26 +128,28 @@ while True:
         things.append(thing_intro_background)
         things.append(thing_selectChar_text)
 
-        available_characters = [thing_character_saif, thing_character_nadeen, thing_character_hashem]
+        available_characters = [thing_character_saif, thing_character_nadeen, thing_character_hashem, thing_character_triangle, thing_character_circle]
         # by default, both characters are set to 0
 
 
         # player1 switches character by using A,D keys
         # player2 switches character by using left,right keys
 
+        for event in events:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_a:
+                    player1_selection = player1_selection - 1
+                    if player1_selection < 0:
+                        player1_selection = len(available_characters) - 1
 
-        if keys[pygame.K_a]:
-            player1_selection = player1_selection - 1
-            if player1_selection < 0:
-                player1_selection = len(available_characters) - 1
+                if event.key == pygame.K_d:
+                    player1_selection = player1_selection + 1
+                    if player1_selection > (len(available_characters) - 1):
+                        player1_selection = 0
 
-        if keys[pygame.K_d]:
-            # TODO add logic that increments player 1 selection
-            # and checks if its greater than length of available characters
-            pass
+                # TODO (HASHEM) do the same for player 2 (Using keys right and left)
+                # hint: same code as above, but change player1 to 2, and they keys to arrows
 
-        # TODO do the same for player 2 (Using keys right and left)
-        # HASHEM
 
         player1_character = copy.deepcopy(available_characters[player1_selection])
         player2_character = copy.deepcopy(available_characters[player2_selection])
@@ -146,33 +158,50 @@ while True:
         player1_character.pos_x = 200
         player1_character.pos_y = 300
 
-        player2_character.pos_x = 1000
+        player2_character.pos_x = 900
         player2_character.pos_y = 300
         things.append(player1_character)
         things.append(player2_character)
 
-        # TODO add key listener to confirm selection and move to next state
-        # SAIF
+        # TODO add key listener to confirm selection and move to next state (SAIF)
+        # hint: check how we handled key presses above (line 138) TODO change this
+
 
     elif state == 2:  # Level 1  (Red light, Green Light)
-        get_ready_countdown = 3000  # 3000 frames
+
 
         if innerState == 0:  # GET READY SCREEN
+            things.clear()
+
             # TODO handle this state as following: (FARHAN)
-            # Add the level background to things
-            # Add a text "GET READY" to things , in the middle of screen
-            # Add the 2 selected characters to things, positioned at the left of screen
-            # Add the "Doll" character to things, at the right of screen
+            # empty list of things
+            # Add the level background to list of things
+            # Add a text "GET READY" to list of things , in the middle of screen
+            # Add the 2 selected characters to list of things, positioned at the left of screen
+            # Add the "Doll" character to list of things, positioned at the right of screen
+            # hint: see the beginning of state 1
+
 
             # decrease countdown by one, if it reaches zero switch to next innerState
             # (Acts like a timer)
-            get_ready_countdown -= 1
-            if (get_ready_countdown == 0):
+            countdown -= 1
+            if (countdown == 0):
                 innerState = 1
+                countdown = 320
 
         elif innerState == 1:  # GAME STILL ON GREEN LIGHT
+            if countdown == 320:
+                redGreenLightSound.play()
+            countdown -= 1
+            if (countdown == 0):
+                innerState = 2
+                countdown = 320
             pass
         elif innerState == 2:  # GAME STILL ON RED LIGHT
+            countdown -= 1
+            if (countdown == 0):
+                innerState = 1
+                countdown = 320
             pass
         elif innerState == 3:  # PLAYER 1 WON
             pass
