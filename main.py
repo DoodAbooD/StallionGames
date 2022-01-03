@@ -184,6 +184,11 @@ while True:
         things.append(player1_character)
         things.append(player2_character)
 
+        # Check if space is pressed
+        if keys[pygame.K_SPACE]:
+            innerState = 0  # reset inner state
+            state = 2  # go to state 2 (level 1)
+
         # TODO add key listener to confirm selection and move to next state (SAIF)
         # hint: check how we did this in previous state (line 135)
 
