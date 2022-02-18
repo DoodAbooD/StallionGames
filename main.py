@@ -2,22 +2,22 @@ import pygame
 import copy
 
 
-# *************************************  'thing' class definition *************************************
-# A "thing" is basically anything that can be shown to the screen in the game
-# such as characters, backgrounds, or text
-class Thing:
-    image_path = "assets/not_found.jpg"  # by default, a thing has the "not found" image displayed
+# *************************************  'drawable' class definition *************************************
+class Drawable:
+    """A "Drawable" is basically anything that can be drawn to the screen in the game
+    such as characters, backgrounds, or text"""
+    image_path = "assets/not_found.jpg"  # by default, a drawable has the "not found" image displayed
     image = pygame.image.load("assets/not_found.jpg")
     text = ""
     textSurface = None
-    isText = False  # if this thing is a text, this value becomes true
+    isText = False  # if this drawable is a text, this value becomes true
     fontSize = 30
     pos_x = 0
     pos_y = 0
     size_x = 0
     size_y = 0
 
-    # the init function which is called when we create a new thing
+    # the init function which is called when we create a new drawable
     def __init__(self, image_path, pos_x, pos_y, size_x, size_y, isText, text="No Text", fontSize=30):
         self.image_path = image_path
         self.pos_x = pos_x
@@ -28,9 +28,9 @@ class Thing:
         self.text = text
         self.fontSize = fontSize
 
-    # method called to make the 'thing' draw itself on the window
+    # method called to make the 'drawable' draw itself on the window
     def draw_self(self, window):
-        if self.isText:  # if this thing was a text
+        if self.isText:  # if this drawable was a text
             # Try assigning text
             try:
                 myFont = pygame.font.SysFont('Comic Sans MS', self.fontSize)
@@ -41,7 +41,7 @@ class Thing:
             # draw the text
             window.blit(self.textSurface, (self.pos_x, self.pos_y))
 
-        else:  # else if it wasnt a text, then its an image
+        else:  # else if it wasn't a text, then its an image
             # Try assigning image path
             try:
                 self.image = pygame.image.load(self.image_path)
@@ -53,13 +53,13 @@ class Thing:
             window.blit(scaled_image, (self.pos_x, self.pos_y))
 
 
-# ************************************* end of class 'thing' definition **************************************
+# ************************************* end of class 'drawable' definition **************************************
 
 # defining window size 1200 x 600
 WINDOW_WIDTH = 1200
 WINDOW_HEIGHT = 600
 
-# making the window with the dimensions above, setting its title and background color
+# creating the window with the dimensions above, setting its title and background color
 window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("StallionGames")
 window.fill((255, 255, 255))
@@ -77,15 +77,16 @@ FPS = 100
 clock = pygame.time.Clock()
 
 # state is used to see which level the game is in,
-# innerState is used to see which part of the level the game is in
+# innerState is used to see which part of the current level we are in
 state = 0  # 0- Intro screen | 1- Character selection Screen | 2- Level 1 | 3- Level 2 | 4- Level 3 | 4- Winner screen
 innerState = 0
 
-# a list of things to draw on screen, empty for now
-things = list()
+# a list of all drawables to draw on screen, empty for now
+all_drawables = []
 
 
 def generate_multi_line_text(s, pos_x, pos_y, font_size):
+    """Method used to generate a list of text drawables out of a multiline string input"""
     generated_text_list = []
     current_y = pos_y
     stream = ""
@@ -93,41 +94,40 @@ def generate_multi_line_text(s, pos_x, pos_y, font_size):
         if char != '\n':
             stream += char
         else:
-            generated_text_list.append(Thing("", pos_x, current_y, 0, 0, True, stream, font_size))
+            generated_text_list.append(Drawable("", pos_x, current_y, 0, 0, True, stream, font_size))
             stream = ""
             current_y += font_size
     return generated_text_list
 
 
-# things that can be added
-# we are creating them using the class 'thing', and its __init__ method (see line 21)
-thing_intro_background = Thing("assets/intro_bg.png", 0, 0, 1200, 600, False)
-thing_intro_text = Thing("", 400, 500, 0, 0, True, "Press Space to Start!", 30)
-thing_character_doll = Thing("assets/char_doll.png", 0, 0, 100, 300, False)
-thing_character_saif = Thing("assets/char_saif.png", 0, 0, 100, 180, False)
-thing_character_nadeen = Thing("assets/char_nadeen.png", 0, 0, 100, 180, False)
-thing_character_hashem = Thing("assets/char_hashem.png", 0, 0, 100, 180, False)
-thing_character_triangle = Thing("assets/char_triangle.png", 0, 0, 100, 180, False)
-thing_character_circle = Thing("assets/char_circle.png", 0, 0, 100, 180, False)
-thing_selectChar_text_list = generate_multi_line_text("Select your characters\n"
-                                                      "with A and D for player 1\n"
-                                                      "and Arrows for player 2\n"
-                                                      "Press Enter to continue", 450, 50, 30)
-thing_logo = Thing("assets/logo.png", 400, 50, 300, 300, False)
+# defining drawables that will be added to our list at different times of the game
+# we are creating them using the class 'drawable', and its __init__ method
+logo_drawable = Drawable("assets/logo.png", 400, 50, 300, 300, False)
+intro_background_drawable = Drawable("assets/intro_bg.png", 0, 0, 1200, 600, False)
+intro_text_drawable = Drawable("", 400, 500, 0, 0, True, "Press Space to Start!", 30)
+character_doll_drawable = Drawable("assets/char_doll.png", 0, 0, 100, 300, False)
+character_saif_drawable = Drawable("assets/char_saif.png", 0, 0, 100, 180, False)
+character_nadeen_drawable = Drawable("assets/char_nadeen.png", 0, 0, 100, 180, False)
+character_hashem_drawable = Drawable("assets/char_hashem.png", 0, 0, 100, 180, False)
+character_triangle_drawable = Drawable("assets/char_triangle.png", 0, 0, 100, 180, False)
+character_circle_drawable = Drawable("assets/char_circle.png", 0, 0, 100, 180, False)
+select_char_text_list_drawable = generate_multi_line_text("Select your characters\n"
+                                                          "with A and D for player 1\n"
+                                                          "and Arrows for player 2\n"
+                                                          "Press Enter to continue", 450, 50, 30)
 
-# TODO add remaining things as needed
+# TODO add more drawbles we might need
 
-# we have 2 players, making an empty "thing" class for each of them
+# we have 2 players, making an empty "drawable" class for each of them
 # selection index (0 and 1) used to loop between available characters at character selection screen
-player1_character = None
-player2_character = None
-player1_selection = 0
-player2_selection = 1
+player1_character = None  # nothing selected for now
+player2_character = None  # nothing selected for now
+player1_selection = 0  # for a start, player 1 selection is set to character # 0
+player2_selection = 1  # for a start, player 2 selection is set to character # 1
 
-# countdown value to wait between events
-countdown = 180  # 180 frames
 
-# Main game loop starts here
+# ************************************* Main game loop starts here **************************************
+
 while True:
     clock.tick(FPS)
     events = pygame.event.get()
@@ -135,20 +135,28 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
 
-    # get all keys pressed
+    # get all keys pressed and store them in dictionary "keys"
     keys = pygame.key.get_pressed()
 
-    # Main States tree
+    # black out the screen
+    window.fill((0, 0, 0))
+
+    # draw everything in the list "all_drawables" to the screen
+    for drawable in all_drawables:
+        drawable.draw_self(window)
+
+    # update the display
+    pygame.display.update()
 
     # ************************ STATE 0 INTRO SCREEN ************************
     if state == 0:  # Intro screen
-        # empty all things to draw
-        things.clear()
+        # empty list of all things to draw (all_drawables)
+        all_drawables.clear()
 
-        # add background and text to things to draw
-        things.append(thing_intro_background)
-        things.append(thing_logo)
-        things.append(thing_intro_text)
+        # add intro background, logo, and intro text to list of things to draw (all_drawables)
+        all_drawables.append(intro_background_drawable)
+        all_drawables.append(logo_drawable)
+        all_drawables.append(intro_text_drawable)
 
         # Check if space is pressed
         if keys[pygame.K_SPACE]:
@@ -159,17 +167,17 @@ while True:
 
     elif state == 1:  # Character Selection
         # empty all things to draw
-        things.clear()
+        all_drawables.clear()
         print("At state 1")
 
         # add background and text
-        things.append(thing_intro_background)
-        for thing in thing_selectChar_text_list:
-            things.append(thing)
-        print(len(things))
+        all_drawables.append(intro_background_drawable)
+        for thing in select_char_text_list_drawable:
+            all_drawables.append(thing)
+        print(len(all_drawables))
 
-        available_characters = [thing_character_saif, thing_character_nadeen, thing_character_hashem,
-                                thing_character_triangle, thing_character_circle]
+        available_characters = [character_saif_drawable, character_nadeen_drawable, character_hashem_drawable,
+                                character_triangle_drawable, character_circle_drawable]
         # by default, both characters are set to 0
 
         # player1 switches character by using A,D keys
@@ -201,8 +209,8 @@ while True:
         player1_character.pos_y = 300
         player2_character.pos_x = 900
         player2_character.pos_y = 300
-        things.append(player1_character)
-        things.append(player2_character)
+        all_drawables.append(player1_character)
+        all_drawables.append(player2_character)
 
         # Check if space is pressed
         if keys[pygame.K_RETURN]:
@@ -213,8 +221,10 @@ while True:
 
     elif state == 2:  # Level 1  (Red light, Green Light)
         print("at state 2")
+        # countdown value to wait between events
+        countdown = 180  # 180 frames
         if innerState == 0:  # GET READY SCREEN
-            things.clear()
+            all_drawables.clear()
 
             # TODO the following:
             # empty list of things
@@ -226,7 +236,6 @@ while True:
             # Add a text "GET READY" to list of things , in the middle of screen
             # Add the "Doll" character to list of things, positioned at the right of screen
             # hint: see the beginning of state 1 to check how we add things
-
 
             # decrease countdown by one, if it reaches zero switch to next innerState
             # (Acts like a timer)
@@ -273,12 +282,4 @@ while True:
     elif state == 5:  # Winner screen
         pass
 
-    # black out the screen
-    window.fill((0, 0, 0))
 
-    # draw everything in the list "things"
-    for thing in things:
-        thing.draw_self(window)
-
-    # update the display
-    pygame.display.update()
