@@ -197,8 +197,16 @@ while True:
                     if player1_selection < 0:  # if player 1 selection reaches number 0
                         player1_selection = len(available_characters) - 1  # cycle back to last character
 
-                # TODO (SAIF) the same for player 2 (Using keys right and left)
-                # hint: same code as above, but change player1 to 2, and they keys to arrows
+                if event.key == pygame.K_RIGHT: # if the pressed key is (right_arrow)
+                    player2_selection = player2_selection + 1  # increment player 2 selection by 1
+                    if player2_selection > (len(
+                            available_characters) - 1):  # if player 2 selection reaches above the number of available characters
+                        player2_selection = 0  # cycle back to first character (number 0)
+                        
+                if event.key == pygame.K_LEFT:  # and the pressed key is (lest_arrow)
+                    player2_selection = player2_selection - 1  # decrement player 2 selection by 1
+                    if player2_selection < 0:  # if player 1 selection reaches number 0
+                        player2_selection = len(available_characters) - 1  # cycle back to last character
 
         # after selections were made, assign each player a copy of the character they selected
         player1_character = copy.deepcopy(available_characters[player1_selection])
