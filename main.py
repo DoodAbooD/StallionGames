@@ -78,7 +78,7 @@ clock = pygame.time.Clock()
 
 # state is used to see which level the game is in,
 # innerState is used to see which part of the current level we are in
-state = 0  # 0- Intro screen | 1- Character selection Screen | 2- Level 1 | 3- Level 2 | 4- Level 3 | 4- Winner screen
+state = 0  # 0- Intro screen | 1- Character selection Screen | 2- Level 1 | 3- Level 2 | 4- Level 3 | 5- Winner screen
 innerState = 0
 
 # a list of all drawables to draw on screen, empty for now
@@ -116,7 +116,7 @@ select_char_text_list_drawable = generate_multi_line_text("Select your character
                                                           "and Arrows for player 2\n"
                                                           "Press Enter to continue", 450, 50, 30)
 
-# TODO add more drawbles we might need
+# TODO add more drawables we might need
 
 # we have 2 players, making an empty "drawable" class for each of them
 # selection index (0 and 1) used to loop between available characters at character selection screen
@@ -197,7 +197,7 @@ while True:
                     if player1_selection < 0:  # if player 1 selection reaches number 0
                         player1_selection = len(available_characters) - 1  # cycle back to last character
 
-                # TODO the same for player 2 (Using keys right and left)
+                # TODO (SAIF) the same for player 2 (Using keys right and left)
                 # hint: same code as above, but change player1 to 2, and they keys to arrows
 
         # after selections were made, assign each player a copy of the character they selected
@@ -226,13 +226,13 @@ while True:
         if innerState == 0:  # GET READY SCREEN
             all_drawables.clear()
 
-            # TODO the following:
-            # empty list of things
-            # Add the level 1 background to list of things
-            # Add the 2 selected characters to list of things, positioned at the left of screen
-            # hint: see the beginning of state 1 to check how we add things
+            # TODO (MAEEN) the following:
+            # empty list of all drawables
+            # Add the level 1 background to list of drawables
+            # Add the 2 selected characters to list of drawables, positioned at the left of screen
+            # hint: see the beginning of state 1 to check how we add drawables
 
-            # TODO the following:
+            # TODO (SAIF) the following:
             # Add a text "GET READY" to list of things , in the middle of screen
             # Add the "Doll" character to list of things, positioned at the right of screen
             # hint: see the beginning of state 1 to check how we add things
