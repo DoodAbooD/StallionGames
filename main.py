@@ -97,6 +97,7 @@ def generate_multi_line_text(s, pos_x, pos_y, font_size):
             generated_text_list.append(Drawable("", pos_x, current_y, 0, 0, True, stream, font_size))
             stream = ""
             current_y += font_size
+    generated_text_list.append(Drawable("", pos_x, current_y, 0, 0, True, stream, font_size))
     return generated_text_list
 
 
