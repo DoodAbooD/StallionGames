@@ -116,6 +116,7 @@ select_char_text_list_drawable = generate_multi_line_text("Select your character
                                                           "with A and D for player 1\n"
                                                           "and Arrows for player 2\n"
                                                           "Press Enter to continue", 450, 50, 30)
+get_ready_text = Drawable("Get Ready", 400, 50, 0, 0, True, "Get Ready", 30)
 
 # TODO add more drawables we might need
 
@@ -242,6 +243,10 @@ while True:
             # hint: see the beginning of state 1 to check how we add drawables
 
             # TODO (SAIF) the following:
+            character_doll_drawable.pos_x = 1050
+            character_doll_drawable.pos_y = 300
+            all_drawables.append(character_doll_drawable)
+            all_drawables.append(get_ready_text)
             # Add a text "GET READY" to list of things , in the middle of screen
             # Add the "Doll" character to list of things, positioned at the right of screen
             # hint: see the beginning of state 1 to check how we add things
